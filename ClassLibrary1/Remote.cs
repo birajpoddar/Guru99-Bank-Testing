@@ -15,7 +15,7 @@ namespace Guru99TestFramework
     [TestFixture("Chrome")]
     [TestFixture("Android")]
     [TestFixture("iPhone")]
-    [Parallelizable(ParallelScope.Fixtures)]
+   [Parallelizable(ParallelScope.Fixtures)]
     class Remote : Local
     {
         DesiredCapabilities capability;
@@ -66,10 +66,7 @@ namespace Guru99TestFramework
                 new Uri("http://hub-cloud.browserstack.com/wd/hub/"), capability
             );
         }
-
-        //[TestCase("mngr68233", "mYdApAs")]
-        //public void TestLogin(string UserName, string Password)
-            
+          
 
     }
 }

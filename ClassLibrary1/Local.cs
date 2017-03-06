@@ -14,12 +14,12 @@ using OpenQA.Selenium.Chrome;
 
 namespace Guru99TestFramework
 {
+    [Parallelizable(ParallelScope.Children)]
     [TestFixture]
     public class Local
     {
         public IWebDriver driver;
         Screenshot ss;
-        bool acceptNextAlert = false;
         By element;
 
         public Local()
@@ -35,6 +35,7 @@ namespace Guru99TestFramework
             //driver.Manage().Window.Maximize();
         }
 
+        [Sequential]
         [TestCase("mngr68233", "mYdApAs")]
         public void TestLogin(string UserName, string Password)
         {
@@ -43,7 +44,7 @@ namespace Guru99TestFramework
             /// Sets the User Name if the element is present
             /// </summary>
             element= By.Name("uid");
-            if (!IsElementPresent(element))            
+            if (!Framework.IsElementPresent(driver,element))            
                 Assert.Fail("User ID Text Box doesn't EXIST");
            
             driver.FindElement(element).Clear();
@@ -54,7 +55,7 @@ namespace Guru99TestFramework
             /// Sets the Password if the element is present
             /// </summary>
             element = By.Name("password");
-            if (!IsElementPresent(element))
+            if (!Framework.IsElementPresent(driver, element))
                 Assert.Fail("Password Text Box doesn't EXIST");
 
             driver.FindElement(element).Clear();
@@ -65,7 +66,7 @@ namespace Guru99TestFramework
             /// Clicks the LOGIN button if the element is present
             /// </summary>
             element = By.Name("btnLogin");
-            if (!IsElementPresent(element))
+            if (!Framework.IsElementPresent(driver, element))
                 Assert.Fail("Login Button doesn't EXIST");
 
             driver.FindElement(element).Click();            
@@ -77,16 +78,17 @@ namespace Guru99TestFramework
             /// <summary>
             /// If Alert is present than close it and continue TEST
             /// </summary>
-            if (IsAlertPresent())
-                CloseAlertAndGetItsText();
+            if (Framework.IsAlertPresent(driver))
+                Framework.CloseAlertAndGetItsText(driver);
 
-            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 
             /// <summary>
             /// Verifies if LOGIN is succesful
             /// </summary>
             element = By.CssSelector("tr.heading3 > td");
-            if (!IsElementPresent(element))
+            if (!Framework.IsElementPresent(driver, element))
             {
                 ss = ((ITakesScreenshot)driver).GetScreenshot();
                 ss.SaveAsFile(@"C:\Users\Developer\Desktop\Selenium C#\ClassLibrary1\Screenshots\Error.png", ScreenshotImageFormat.Png);
@@ -104,52 +106,7 @@ namespace Guru99TestFramework
             driver.Quit();
         }
 
-        private bool IsElementPresent(By by)
-        {
-            try
-            {
-                driver.FindElement(by);
-                return true;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-        }
-        private bool IsAlertPresent()
-        {
-            try
-            {
-                driver.SwitchTo().Alert();
-                return true;
-            }
-            catch (NoAlertPresentException)
-            {
-                return false;
-            }
-        }
 
-        private string CloseAlertAndGetItsText()
-        {
-            try
-            {
-                IAlert alert = driver.SwitchTo().Alert();
-                string alertText = alert.Text;
-                if (acceptNextAlert)
-                {
-                    alert.Accept();
-                }
-                else
-                {
-                    alert.Dismiss();
-                }
-                return alertText;
-            }
-            finally
-            {
-                acceptNextAlert = false;
-            }
-        }
 
         //private 
     }
