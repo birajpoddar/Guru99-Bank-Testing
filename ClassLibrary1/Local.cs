@@ -32,7 +32,7 @@ namespace Guru99TestFramework
         {
             //driver = new FirefoxDriver();
             driver.Navigate().GoToUrl("http://demo.guru99.com/v4/");
-            driver.Manage().Window.Maximize();
+            //driver.Manage().Window.Maximize();
         }
 
         [TestCase("mngr68233", "mYdApAs")]
